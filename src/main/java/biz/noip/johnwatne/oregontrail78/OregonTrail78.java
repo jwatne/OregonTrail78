@@ -1,5 +1,7 @@
 package biz.noip.johnwatne.oregontrail78;
 
+import java.util.Scanner;
+
 /**
  * Oregon Trail 78 - Java port of the 1978 edition of Oregon Trail. Paraphrasing
  * original source comments:
@@ -59,8 +61,106 @@ package biz.noip.johnwatne.oregontrail78;
  *
  */
 public class OregonTrail78 {
-
+    /**
+     * Main method of application.
+     *
+     * @param args
+     *            command-line arguments; not used.
+     */
     public static void main(final String[] args) {
+        final OregonTrail78 game = new OregonTrail78();
+
+        try (Scanner scanner = new Scanner(System.in)) {
+            System.out.println("DO YOU NEED INSTRUCTIONS  (YES/NO)");
+            String yesNoResponse = scanner.nextLine();
+
+            if ((yesNoResponse != null) && yesNoResponse.startsWith("N")) {
+                game.startGame();
+            } else {
+                game.printInstructions();
+                game.startGame();
+            }
+        }
+    }
+
+    /**
+     * Prints instructions for program.
+     */
+    public void printInstructions() {
+        System.out.println(
+                "THIS PROGRAM SIMULATES A TRIP OVER THE OREGON TRAIL FROM");
+        System.out.println(
+                "INDEPENDENCE, MISSOURI TO OREGON CITY, OREGON IN 1847.");
+        System.out.println(
+                "YOUR FAMILY OF FIVE WILL COVER THE 2000 MILE OREGON TRAIL");
+        System.out.println("IN 5-6 MONTHS --- IF YOU MAKE IT ALIVE.");
+        System.out.println();
+        System.out.println(
+                "YOU HAD SAVED $900 TO SPEND FOR THE TRIP, AND YOU'VE JUST");
+        System.out.println("   PAID $200 FOR A WAGON.");
+        System.out.println(
+                "YOU WILL NEED TO SPEND THE REST OF YOUR MONEY ON THE");
+        System.out.println("   FOLLOWING ITEMS:");
+        System.out.println();
+        System.out.println("     OXEN - YOU CAN SPEND $200-$300 ON YOUR TEAM");
+        System.out.println(
+                "             THE MORE YOU SPEND, THE FASTER YOU'LL GO");
+        System.out
+                .println("                BECAUSE YOU'LL HAVE BETTER ANIMALS");
+        System.out.println();
+        System.out.println(
+                "     FOOD - THE MORE YOU HAVE, THE LESS CHANCE THERE");
+        System.out.println("              IS OF GETTING SICK");
+        System.out.println();
+        System.out.println("     AMMUNITION - $1 BUYS A BELT OF 50 BULLETS");
+        System.out.println(
+                "            YOU WILL NEED BULLETS FOR ATTACKS BY ANIMALS");
+        System.out.println("               AND BANDITS, AND FOR HUNTING FOOD");
+        System.out.println();
+        System.out.println(
+                "     CLOTHING - THIS IS ESPECIALLY IMPORTANT FOR THE COLD");
+        System.out.println(
+                "               WEATHER YOU WILL ENCOUNTER WHEN CROSSING");
+        System.out.println("               THE MOUNTAINS");
+        System.out.println();
+        System.out.println(
+                "     MISCELLANEOUS SUPPLIES - THIS INCLUDES MEDICINE AND");
+        System.out.println(
+                "               OTHER THINGS YOU WILL NEED FOR SICKENESS");
+        System.out.println("               AND EMERGENCY REPAIRS");
+        System.out.println();
+        System.out.println();
+        System.out.println(
+                "YOU CAN SPEND ALL YOUR MONEY BEFORE YOU START YOUR TRIP -");
+        System.out.println(
+                "OR YOU CAN SAVE SOME OF YOUR CASH TO SPEND AT FORTS ALONG");
+        System.out.println(
+                "THE WAY WHEN YOU RUN LOW.  HOWEVER, ITEMS COST MORE AT");
+        System.out.println(
+                "THE FORTS.  YOU CAN ALSO GO HUNTING ALONG THE WAY TO GET");
+        System.out.println("MORE FOOD.");
+        System.out.println(
+                "WHENEVER YOU HAVE TO USE YOUR TRUSTY RIFLE ALONG THE WAY,");
+        System.out.println(
+                "YOU WILL BE TOLD TO TYPE IN A WORD (ONE THAT SOUNDS LIKE A");
+        System.out.println(
+                "GUN SHOT). THE FASTER YOU TYPE IN THAT WORD AND HIT THE");
+        System.out.println(
+                "'RETURN' KEY, THE BETTER LUCK YOU'LL HAVE WITH YOUR GUN.");
+        System.out.println();
+        System.out
+                .println("AT EACH TURN, ALL ITEMS YOU OWN ARE SHOWN IN DOLLAR");
+        System.out.println("AMOUNTS EXCEPT BULLETS");
+        System.out
+                .println("WHEN ASKED TO ENTER MONEY AMOUNTS, DON'T USE A '$'.");
+        System.out.println();
+        System.out.println("GOOD LUCK!!!");
+    }
+
+    /**
+     * Starts the game [starting at line 270 in original BASIC code]
+     */
+    public void startGame() {
         // TODO Auto-generated method stub
 
     }
