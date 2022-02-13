@@ -2,6 +2,8 @@ package biz.noip.johnwatne.oregontrail78;
 
 import java.util.Scanner;
 
+import biz.noip.johnwatne.oregontrail78.service.InputService;
+
 /**
  * Oregon Trail 78 - Java port of the 1978 edition of Oregon Trail. Paraphrasing
  * original source comments:
@@ -61,6 +63,8 @@ import java.util.Scanner;
  *
  */
 public class OregonTrail78 {
+    private InputService inputService = new InputService();
+
     /**
      * Main method of application.
      *
@@ -74,7 +78,8 @@ public class OregonTrail78 {
             System.out.println("DO YOU NEED INSTRUCTIONS  (YES/NO)");
             String yesNoResponse = scanner.nextLine();
 
-            if ((yesNoResponse != null) && yesNoResponse.startsWith("N")) {
+            if ((yesNoResponse != null)
+                    && yesNoResponse.toUpperCase().startsWith("N")) {
                 game.startGame();
             } else {
                 game.printInstructions();
@@ -161,6 +166,36 @@ public class OregonTrail78 {
      * Starts the game [starting at line 270 in original BASIC code]
      */
     public void startGame() {
+        final Long shootingExpertiseLevel = getShootingExpertiseLevel();
+        makeInitialPurchases();
+    }
+
+    /**
+     * Prompts for and returns shooting expertise level.
+     *
+     * @return the shooting expertise level.
+     */
+    private Long getShootingExpertiseLevel() {
+        System.out.println();
+        System.out.println();
+        System.out.println("HOW GOOD A SHOT ARE YOU WITH YOUR RIFLE?");
+        System.out.println(
+                "  (1) ACE MARKSMAN,  (2) GOOD SHOT,  (3) FAIR TO MIDDLIN'");
+        System.out.println("      (4) NEED MORE PRACTICE,  (5) SHAKY KNEES");
+        System.out.println(
+                "ENTER ONE OF THE ABOVE -- THE BETTER YOU CLAIM YOU ARE, THE");
+        System.out.println(
+                "FASTER YOU'LL HAVE TO BE WITH YOUR GUN TO BE SUCCESSFUL.");
+        final Long shootingExpertiseLevel =
+                inputService.getLongInRangeFromInput(InputService.ZERO_LONG,
+                        InputService.ZERO_LONG, Long.valueOf(5));
+        return shootingExpertiseLevel;
+    }
+
+    /**
+     * Make the initial purchases at the start of the trip.
+     */
+    private void makeInitialPurchases() {
         // TODO Auto-generated method stub
 
     }
