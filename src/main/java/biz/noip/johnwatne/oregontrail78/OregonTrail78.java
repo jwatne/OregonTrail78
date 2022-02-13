@@ -2,6 +2,8 @@ package biz.noip.johnwatne.oregontrail78;
 
 import java.util.Scanner;
 
+import biz.noip.johnwatne.oregontrail78.model.GameStatus;
+import biz.noip.johnwatne.oregontrail78.service.Constants;
 import biz.noip.johnwatne.oregontrail78.service.InputService;
 
 /**
@@ -63,7 +65,22 @@ import biz.noip.johnwatne.oregontrail78.service.InputService;
  *
  */
 public class OregonTrail78 {
-    private InputService inputService = new InputService();
+    private static final int MIN_ANIMAL_SPENDING_AMOUNT = 200;
+    private static final int MAX_ANIMAL_SPENDING_AMOUNT = 300;
+    private InputService inputService;
+    private GameStatus gameStatus = new GameStatus();
+    private Scanner scanner;
+
+    /**
+     * Constructs the game object with the specified scanner for user input.
+     *
+     * @param scanner
+     *            the scanner for user input.
+     */
+    public OregonTrail78(final Scanner scanner) {
+        this.scanner = scanner;
+        this.inputService = new InputService(scanner);
+    }
 
     /**
      * Main method of application.
@@ -72,9 +89,8 @@ public class OregonTrail78 {
      *            command-line arguments; not used.
      */
     public static void main(final String[] args) {
-        final OregonTrail78 game = new OregonTrail78();
-
         try (Scanner scanner = new Scanner(System.in)) {
+            final OregonTrail78 game = new OregonTrail78(scanner);
             System.out.println("DO YOU NEED INSTRUCTIONS  (YES/NO)");
             String yesNoResponse = scanner.nextLine();
 
@@ -187,8 +203,8 @@ public class OregonTrail78 {
         System.out.println(
                 "FASTER YOU'LL HAVE TO BE WITH YOUR GUN TO BE SUCCESSFUL.");
         final Long shootingExpertiseLevel =
-                inputService.getLongInRangeFromInput(InputService.ZERO_LONG,
-                        InputService.ZERO_LONG, Long.valueOf(5));
+                inputService.getLongInRangeFromInput(Constants.ZERO_LONG,
+                        Constants.ZERO_LONG, Long.valueOf(5));
         return shootingExpertiseLevel;
     }
 
@@ -196,7 +212,27 @@ public class OregonTrail78 {
      * Make the initial purchases at the start of the trip.
      */
     private void makeInitialPurchases() {
-        // TODO Auto-generated method stub
+        // Initialization of various flag at the start of the INITIAL PURCHASES
+        // section of the original code moved to initialization of gameStatus.
+        System.out.println();
+        System.out.println();
+        Long animalsSpendingAmount = Constants.ZERO_LONG;
+
+        while ((animalsSpendingAmount < MIN_ANIMAL_SPENDING_AMOUNT)
+                || (animalsSpendingAmount > MAX_ANIMAL_SPENDING_AMOUNT)) {
+            System.out
+                    .println("HOW MUCH DO YOU WANT TO SPEND ON YOUR OXEN TEAM");
+            animalsSpendingAmount =
+                    inputService.getLongFromInput(Constants.ZERO_LONG);
+
+            if (animalsSpendingAmount < MIN_ANIMAL_SPENDING_AMOUNT) {
+                System.out.println("NOT ENOUGH");
+            } else if (animalsSpendingAmount > MAX_ANIMAL_SPENDING_AMOUNT) {
+                System.out.println("TOO MUCH");
+            }
+        }
+
+        System.out.println("Amount spent on oxen: " + animalsSpendingAmount);
 
     }
 

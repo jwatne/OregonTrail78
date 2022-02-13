@@ -9,10 +9,17 @@ import java.util.Scanner;
  *
  */
 public class InputService {
+    private Scanner scanner;
+
     /**
-     * Zero as a Long.
+     * Creates the InputService with the specified scanner for user input.
+     *
+     * @param scanner
+     *            the specified scanner for user input.
      */
-    public static final Long ZERO_LONG = Long.valueOf(0);
+    public InputService(final Scanner scanner) {
+        this.scanner = scanner;
+    }
 
     /**
      * Returns the value read from the next line entered as input as a Long,
@@ -49,7 +56,7 @@ public class InputService {
     public Long getLongFromInput(final Long defaultValue) {
         Long returnValue = defaultValue;
 
-        try (Scanner scanner = new Scanner(System.in)) {
+        try {
             final String nextLine = scanner.nextLine();
             returnValue = Long.parseLong(nextLine);
         } catch (Exception e) {
