@@ -65,4 +65,30 @@ public class InputService {
 
         return returnValue;
     }
+
+    /**
+     * Returns a non-negative amount entered as input for the amount to spend on
+     * the prompted item. The prompt is repeated until an amount equal to or
+     * greater than zero is entered.
+     *
+     * @param item
+     *            the item for which the spending amount is to be entered.
+     *
+     * @return a non-negative amount entered as input for the amount to spend on
+     *         the prompted item.
+     */
+    public Long getAmountToSpendFromInput(final String item) {
+        Long spendingAmount = -1L;
+
+        while (spendingAmount < 0L) {
+            System.out.println("HOW MUCH DO YOU WANT TO SPEND ON " + item);
+            spendingAmount = this.getLongFromInput(-1L);
+
+            if (spendingAmount < 0L) {
+                System.out.println("IMPOSSIBLE");
+            }
+        }
+
+        return spendingAmount;
+    }
 }

@@ -40,6 +40,7 @@ import biz.noip.johnwatne.oregontrail78.service.InputService;
  * <li>D4 = Current date [currentDate]</li>
  * <li>D9 = Choice of shooting expertise level [shootingExpertiseLevel]</li>
  * <li>E = Choice of eating [eatingChoice]</li>
+ * <li>F = Amount spent on food [foodSpendingAmount]</li>
  * <li>F1 = Flag for clearing South Pass [clearedSouthPass]</li>
  * <li>F2 = Flag for clearing Blue Mountains [clearedBlueMountains]</li>
  * <li>K8 = Flag for injury [injured]</li>
@@ -65,10 +66,12 @@ import biz.noip.johnwatne.oregontrail78.service.InputService;
  *
  */
 public class OregonTrail78 {
-    private static final int MIN_ANIMAL_SPENDING_AMOUNT = 200;
-    private static final int MAX_ANIMAL_SPENDING_AMOUNT = 300;
+    private static final long MIN_ANIMAL_SPENDING_AMOUNT = 200;
+    private static final long MAX_ANIMAL_SPENDING_AMOUNT = 300;
     private InputService inputService;
+    @SuppressWarnings("unused")
     private GameStatus gameStatus = new GameStatus();
+    @SuppressWarnings("unused")
     private Scanner scanner;
 
     /**
@@ -182,6 +185,7 @@ public class OregonTrail78 {
      * Starts the game [starting at line 270 in original BASIC code]
      */
     public void startGame() {
+        @SuppressWarnings("unused")
         final Long shootingExpertiseLevel = getShootingExpertiseLevel();
         makeInitialPurchases();
     }
@@ -232,8 +236,9 @@ public class OregonTrail78 {
             }
         }
 
-        System.out.println("Amount spent on oxen: " + animalsSpendingAmount);
-
+        Long foodSpendingAmount =
+                inputService.getAmountToSpendFromInput("FOOD");
+        System.out.println("Amount spent on food: " + foodSpendingAmount);
     }
 
 }
