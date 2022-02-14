@@ -25,13 +25,13 @@ import biz.noip.johnwatne.oregontrail78.service.InputService;
  * BASIC code; reproduced below with addition of Java variable name to be used
  * in its place.]
  * <ul>
- * <li>A = Amount spent on animals [animalsSpendingAmount]</li>
- * <li>B = Amount spent on amunition [amunitionSpendingAmount]</li>
+ * <li>A = Amount spent on animals [animals]</li>
+ * <li>B = Amount spent on ammunition [ammunition]</li>
  * <li>B1 = Actual response time for inputing &quot;bang&quot;
  * [actualResponseTime]</li>
  * <li>B2 = Maximum response time for inputing &quot;bang&quot;
  * [maxResponseTime]</li>
- * <li>C = Amount spent on clothing [clothingSpendingAmount]</li>
+ * <li>C = Amount spent on clothing [clothing]</li>
  * <li>C1 = Flag for insufficient clothing in cold weather
  * [insufficientColdWeatherClothing]</li>
  * <li>C$ = Yes/no response to questions [yesNoResponse]</li>
@@ -40,13 +40,13 @@ import biz.noip.johnwatne.oregontrail78.service.InputService;
  * <li>D4 = Current date [currentDate]</li>
  * <li>D9 = Choice of shooting expertise level [shootingExpertiseLevel]</li>
  * <li>E = Choice of eating [eatingChoice]</li>
- * <li>F = Amount spent on food [foodSpendingAmount]</li>
+ * <li>F = Amount spent on food [food]</li>
  * <li>F1 = Flag for clearing South Pass [clearedSouthPass]</li>
  * <li>F2 = Flag for clearing Blue Mountains [clearedBlueMountains]</li>
  * <li>K8 = Flag for injury [injured]</li>
  * <li>L1 = Flag for blizzard [blizzard]</li>
  * <li>M = Total mileage whole trip [tripMileage]</li>
- * <li>M1 = Amount spent on miscellaneous supplies [miscSpendingAmount]</li>
+ * <li>M1 = Amount spent on miscellaneous supplies [misc]</li>
  * <li>M2 = Total mileage up through previous turn
  * [startOfTurnTotalMileage]</li>
  * <li>M9 = Flag for clearing South Pass in setting mileage
@@ -57,7 +57,7 @@ import biz.noip.johnwatne.oregontrail78.service.InputService;
  * <li>S5 = &quot;Hostility of riders&quot; factor [riderHostility]</li>
  * <li>S6 = Shooting word selector [shootingWordSelector]</li>
  * <li>S$ = Variations of shooting word [shootingWord]</li>
- * <li>T = Cash left after initial purchases [cashAfterInitialPurchases]</li>
+ * <li>T = Cash left after initial purchases [cash]</li>
  * <li>X = Choice of action for each turn [action]</li>
  * <li>X1 = Flag for fort option [fort]</li>
  * </ul>
@@ -66,6 +66,7 @@ import biz.noip.johnwatne.oregontrail78.service.InputService;
  *
  */
 public class OregonTrail78 {
+    private static final int INITIAL_CASH = 700;
     private static final long MIN_ANIMAL_SPENDING_AMOUNT = 200;
     private static final long MAX_ANIMAL_SPENDING_AMOUNT = 300;
     private InputService inputService;
@@ -215,30 +216,43 @@ public class OregonTrail78 {
     /**
      * Make the initial purchases at the start of the trip.
      */
+    @SuppressWarnings("unused")
     private void makeInitialPurchases() {
         // Initialization of various flag at the start of the INITIAL PURCHASES
         // section of the original code moved to initialization of gameStatus.
-        System.out.println();
-        System.out.println();
-        Long animalsSpendingAmount = Constants.ZERO_LONG;
+        Long cash = -1L;
 
-        while ((animalsSpendingAmount < MIN_ANIMAL_SPENDING_AMOUNT)
-                || (animalsSpendingAmount > MAX_ANIMAL_SPENDING_AMOUNT)) {
-            System.out
-                    .println("HOW MUCH DO YOU WANT TO SPEND ON YOUR OXEN TEAM");
-            animalsSpendingAmount =
-                    inputService.getLongFromInput(Constants.ZERO_LONG);
+        while (cash < 0) {
+            System.out.println();
+            System.out.println();
+            Long animals = Constants.ZERO_LONG;
 
-            if (animalsSpendingAmount < MIN_ANIMAL_SPENDING_AMOUNT) {
-                System.out.println("NOT ENOUGH");
-            } else if (animalsSpendingAmount > MAX_ANIMAL_SPENDING_AMOUNT) {
-                System.out.println("TOO MUCH");
+            while ((animals < MIN_ANIMAL_SPENDING_AMOUNT)
+                    || (animals > MAX_ANIMAL_SPENDING_AMOUNT)) {
+                System.out.println(
+                        "HOW MUCH DO YOU WANT TO SPEND ON YOUR OXEN TEAM");
+                animals = inputService.getLongFromInput(Constants.ZERO_LONG);
+
+                if (animals < MIN_ANIMAL_SPENDING_AMOUNT) {
+                    System.out.println("NOT ENOUGH");
+                } else if (animals > MAX_ANIMAL_SPENDING_AMOUNT) {
+                    System.out.println("TOO MUCH");
+                }
+            }
+
+            Long food = inputService.getAmountToSpendFromInput("FOOD");
+            Long ammunition =
+                    inputService.getAmountToSpendFromInput("AMMUNITION");
+            Long clothing = inputService.getAmountToSpendFromInput("CLOTHING");
+            Long misc = inputService
+                    .getAmountToSpendFromInput("MISCELLANEOUS SUPPLIES");
+            cash = INITIAL_CASH - animals - food - ammunition - clothing - misc;
+
+            if (cash < 0) {
+                System.out.println("YOU OVERSPENT--YOU ONLY HAD $"
+                        + INITIAL_CASH + " TO SPEND. BUY AGAIN");
             }
         }
-
-        Long foodSpendingAmount =
-                inputService.getAmountToSpendFromInput("FOOD");
-        System.out.println("Amount spent on food: " + foodSpendingAmount);
     }
 
 }
