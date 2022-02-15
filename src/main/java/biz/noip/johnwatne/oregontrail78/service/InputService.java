@@ -91,4 +91,21 @@ public class InputService {
 
         return spendingAmount;
     }
+
+    /**
+     * Indicates whether the user answered &quot;Yes&quot; in the last line
+     * entered. In keeping with the original 1978 coding of the game, the first
+     * character of the response must be an &quot;N&quot; in order to be treated
+     * as a &quot;No&quot;. All other values are treated as &quot;Yes&quot;
+     * responses.
+     *
+     * @return <code>true</code> if the user answered &quot;Yes&quot; in the
+     *         last line entered.
+     */
+    public boolean isYesAnswerEntered() {
+        final String yesNoResponse = scanner.nextLine();
+        boolean answeredNo = ((yesNoResponse != null)
+                && yesNoResponse.toUpperCase().startsWith("N"));
+        return !answeredNo;
+    }
 }

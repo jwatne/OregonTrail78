@@ -95,16 +95,7 @@ public class OregonTrail78 {
     public static void main(final String[] args) {
         try (Scanner scanner = new Scanner(System.in)) {
             final OregonTrail78 game = new OregonTrail78(scanner);
-            System.out.println("DO YOU NEED INSTRUCTIONS  (YES/NO)");
-            String yesNoResponse = scanner.nextLine();
-
-            if ((yesNoResponse != null)
-                    && yesNoResponse.toUpperCase().startsWith("N")) {
-                game.startGame();
-            } else {
-                game.printInstructions();
-                game.startGame();
-            }
+            game.startGame();
         }
     }
 
@@ -186,9 +177,19 @@ public class OregonTrail78 {
      * Starts the game [starting at line 270 in original BASIC code]
      */
     public void startGame() {
+        System.out.println("DO YOU NEED INSTRUCTIONS  (YES/NO)");
+
+        if (inputService.isYesAnswerEntered()) {
+            printInstructions();
+        }
+
         @SuppressWarnings("unused")
         final Long shootingExpertiseLevel = getShootingExpertiseLevel();
         makeInitialPurchases();
+        System.out.println();
+        System.out.println("MONDAY MARCH 29 1847");
+        System.out.println();
+        // GOTO 1000: BEGINNING EACH TURN
     }
 
     /**
@@ -216,43 +217,69 @@ public class OregonTrail78 {
     /**
      * Make the initial purchases at the start of the trip.
      */
-    @SuppressWarnings("unused")
     private void makeInitialPurchases() {
         // Initialization of various flag at the start of the INITIAL PURCHASES
         // section of the original code moved to initialization of gameStatus.
-        Long cash = -1L;
+        do {
+            gameStatus.setCash(-1L);
+            gameStatus.setAnimals(Constants.ZERO_LONG);
+            getSpendingAmounts();
+            // Convert $ spent on ammunition to # of bullets.
+            gameStatus.setAmmunition(
+                    Constants.BULLETS_PER_DOLLAR * gameStatus.getAmmunition());
+            System.out.println();
+            System.out.println("THIS IS WHAT YOU JUST SPENT:");
+            System.out
+                    .println("FOOD\tBULLETS\tCLOTHING\tMISC. SUPP.\tCASH LEFT");
+            System.out.println("" + gameStatus.getFood() + "\t"
+                    + gameStatus.getAmmunition() + "\t"
+                    + gameStatus.getClothing() + "\t\t" + gameStatus.getMisc()
+                    + "\t\t" + gameStatus.getCash());
+            System.out.println();
+            System.out.println("ARE ALL OF THE AMOUNTS OK");
+        } while (!inputService.isYesAnswerEntered());
+    }
 
-        while (cash < 0) {
+    /**
+     * Enter spending amounts for each item until the total does not exceed
+     * {@link #INITIAL_CASH}.
+     */
+    private void getSpendingAmounts() {
+        while (gameStatus.getCash() < 0) {
             System.out.println();
             System.out.println();
-            Long animals = Constants.ZERO_LONG;
 
-            while ((animals < MIN_ANIMAL_SPENDING_AMOUNT)
-                    || (animals > MAX_ANIMAL_SPENDING_AMOUNT)) {
+            while ((gameStatus.getAnimals() < MIN_ANIMAL_SPENDING_AMOUNT)
+                    || (gameStatus.getAnimals() > MAX_ANIMAL_SPENDING_AMOUNT)) {
                 System.out.println(
                         "HOW MUCH DO YOU WANT TO SPEND ON YOUR OXEN TEAM");
-                animals = inputService.getLongFromInput(Constants.ZERO_LONG);
+                gameStatus.setAnimals(
+                        inputService.getLongFromInput(Constants.ZERO_LONG));
 
-                if (animals < MIN_ANIMAL_SPENDING_AMOUNT) {
+                if (gameStatus.getAnimals() < MIN_ANIMAL_SPENDING_AMOUNT) {
                     System.out.println("NOT ENOUGH");
-                } else if (animals > MAX_ANIMAL_SPENDING_AMOUNT) {
+                } else if (gameStatus
+                        .getAnimals() > MAX_ANIMAL_SPENDING_AMOUNT) {
                     System.out.println("TOO MUCH");
                 }
             }
 
-            Long food = inputService.getAmountToSpendFromInput("FOOD");
-            Long ammunition =
-                    inputService.getAmountToSpendFromInput("AMMUNITION");
-            Long clothing = inputService.getAmountToSpendFromInput("CLOTHING");
-            Long misc = inputService
-                    .getAmountToSpendFromInput("MISCELLANEOUS SUPPLIES");
-            cash = INITIAL_CASH - animals - food - ammunition - clothing - misc;
+            gameStatus.setFood(inputService.getAmountToSpendFromInput("FOOD"));
+            gameStatus.setAmmunition(
+                    inputService.getAmountToSpendFromInput("AMMUNITION"));
+            gameStatus.setClothing(
+                    inputService.getAmountToSpendFromInput("CLOTHING"));
+            gameStatus.setMisc(inputService
+                    .getAmountToSpendFromInput("MISCELLANEOUS SUPPLIES"));
+            gameStatus.setCash(INITIAL_CASH - gameStatus.getAnimals()
+                    - gameStatus.getFood() - gameStatus.getAmmunition()
+                    - gameStatus.getClothing() - gameStatus.getMisc());
 
-            if (cash < 0) {
+            if (gameStatus.getCash() < 0) {
                 System.out.println("YOU OVERSPENT--YOU ONLY HAD $"
                         + INITIAL_CASH + " TO SPEND. BUY AGAIN");
             }
+
         }
     }
-
 }

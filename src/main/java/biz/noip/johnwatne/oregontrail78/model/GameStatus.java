@@ -16,7 +16,13 @@ public class GameStatus {
     boolean clearedBlueMountains = false;
     Long TripMileage = Constants.ZERO_LONG;
     boolean clearedSouthPassSettingMileage = false;
+    Long cash = -1L;
+    Long animals = Constants.ZERO_LONG;
     Long turnNumber = Constants.ZERO_LONG;
+    Long food;
+    Long ammunition;
+    Long clothing;
+    Long misc;
 
     /**
      * Indicates whether the player is in a fort.
@@ -123,6 +129,84 @@ public class GameStatus {
 
     public void setTurnNumber(Long turnNumber) {
         this.turnNumber = turnNumber;
+    }
+
+    /**
+     * Returns the cash currently held by the family.
+     *
+     * @return the cash currently held by the family.
+     */
+    public Long getCash() {
+        return cash;
+    }
+
+    public void setCash(Long cash) {
+        this.cash = cash;
+    }
+
+    /**
+     * Returns current dollar value of animals owned by family.
+     *
+     * @return current dollar value of animals owned by family.
+     */
+    public Long getAnimals() {
+        return animals;
+    }
+
+    public void setAnimals(Long animals) {
+        this.animals = animals;
+    }
+
+    /**
+     * Returns current dollar value of food for family.
+     *
+     * @return current dollar value of food for family.
+     */
+    public Long getFood() {
+        return food;
+    }
+
+    public void setFood(final Long food) {
+        this.food = food;
+    }
+
+    /**
+     * Returns amount of ammunition.
+     *
+     * @return amount of ammunition.
+     */
+    public Long getAmmunition() {
+        return ammunition;
+    }
+
+    public void setAmmunition(final Long ammunition) {
+        this.ammunition = ammunition;
+    }
+
+    /**
+     * Returns dollar amount of clothing owned by family.
+     *
+     * @return dollar amount of clothing owned by family.
+     */
+    public Long getClothing() {
+        return clothing;
+    }
+
+    public void setClothing(final Long clothing) {
+        this.clothing = clothing;
+    }
+
+    /**
+     * Returns dollar amount of miscellaneous supplies owned by family.
+     *
+     * @return dollar amount of miscellaneous supplies owned by family.
+     */
+    public Long getMisc() {
+        return misc;
+    }
+
+    public void setMisc(final Long misc) {
+        this.misc = misc;
     }
 
 }
