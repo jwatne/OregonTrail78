@@ -5,6 +5,8 @@ import java.util.Scanner;
 import biz.noip.johnwatne.oregontrail78.model.GameStatus;
 import biz.noip.johnwatne.oregontrail78.service.Constants;
 import biz.noip.johnwatne.oregontrail78.service.InputService;
+import biz.noip.johnwatne.oregontrail78.service.StatusService;
+import biz.noip.johnwatne.oregontrail78.service.TurnService;
 
 /**
  * Oregon Trail 78 - Java port of the 1978 edition of Oregon Trail. Paraphrasing
@@ -70,10 +72,10 @@ public class OregonTrail78 {
     private static final long MIN_ANIMAL_SPENDING_AMOUNT = 200;
     private static final long MAX_ANIMAL_SPENDING_AMOUNT = 300;
     private InputService inputService;
-    @SuppressWarnings("unused")
     private GameStatus gameStatus = new GameStatus();
     @SuppressWarnings("unused")
     private Scanner scanner;
+    private StatusService statusService = new StatusService();
 
     /**
      * Constructs the game object with the specified scanner for user input.
@@ -190,6 +192,10 @@ public class OregonTrail78 {
         System.out.println("MONDAY MARCH 29 1847");
         System.out.println();
         // GOTO 1000: BEGINNING EACH TURN
+        final TurnService turnService =
+                new TurnService(inputService, gameStatus);
+        turnService.executeTurn();
+
     }
 
     /**
@@ -229,12 +235,7 @@ public class OregonTrail78 {
                     Constants.BULLETS_PER_DOLLAR * gameStatus.getAmmunition());
             System.out.println();
             System.out.println("THIS IS WHAT YOU JUST SPENT:");
-            System.out
-                    .println("FOOD\tBULLETS\tCLOTHING\tMISC. SUPP.\tCASH LEFT");
-            System.out.println("" + gameStatus.getFood() + "\t"
-                    + gameStatus.getAmmunition() + "\t"
-                    + gameStatus.getClothing() + "\t\t" + gameStatus.getMisc()
-                    + "\t\t" + gameStatus.getCash());
+            statusService.printInventory(gameStatus);
             System.out.println();
             System.out.println("ARE ALL OF THE AMOUNTS OK");
         } while (!inputService.isYesAnswerEntered());
