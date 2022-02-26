@@ -1,7 +1,5 @@
 package biz.noip.johnwatne.oregontrail78.model;
 
-import biz.noip.johnwatne.oregontrail78.service.Constants;
-
 /**
  * The status of the game.
  *
@@ -14,15 +12,24 @@ public class GameStatus {
     boolean ill = false;
     boolean clearedSouthPass = false;
     boolean clearedBlueMountains = false;
-    Long TripMileage = Constants.ZERO_LONG;
+    boolean blizzard = false;
+    int TripMileage = 0;
     boolean clearedSouthPassSettingMileage = false;
-    Long cash = -1L;
-    Long animals = Constants.ZERO_LONG;
-    Long turnNumber = Constants.ZERO_LONG;
-    Long food;
-    Long ammunition;
-    Long clothing;
-    Long misc;
+    boolean insufficientColdWeatherClothing = false;
+    int cash = -1;
+    int animals = 0;
+    int turnNumber = 0;
+    int food;
+    int ammunition;
+    int clothing;
+    int misc;
+    boolean finished = false;
+    int tacticsChoice = 0;
+    boolean ridersHostile;
+    int eventGeneratingCounter = 1;
+    int randomEvent;
+    int eatingChoice = -1;
+    int shootingExpertiseLevel = 0;
 
     /**
      * Indicates whether the player is in a fort.
@@ -91,15 +98,28 @@ public class GameStatus {
     }
 
     /**
+     * Indicates whether there is a blizzard.
+     *
+     * @return <code>true</code> if there is a blizzard.
+     */
+    public boolean isBlizzard() {
+        return blizzard;
+    }
+
+    public void setBlizzard(boolean blizzard) {
+        this.blizzard = blizzard;
+    }
+
+    /**
      * Returns the total mileage for the whole trip.
      *
      * @return the total mileage for the whole trip.
      */
-    public Long getTripMileage() {
+    public int getTripMileage() {
         return TripMileage;
     }
 
-    public void setTripMileage(Long tripMileage) {
+    public void setTripMileage(int tripMileage) {
         TripMileage = tripMileage;
     }
 
@@ -119,15 +139,30 @@ public class GameStatus {
     }
 
     /**
+     * Indicates whether the family has insufficient cold weather clothing.
+     *
+     * @return <code>true</code> if the family has insufficient cold weather
+     *         clothing.
+     */
+    public boolean isInsufficientColdWeatherClothing() {
+        return insufficientColdWeatherClothing;
+    }
+
+    public void setInsufficientColdWeatherClothing(
+            boolean insufficientColdWeatherClothing) {
+        this.insufficientColdWeatherClothing = insufficientColdWeatherClothing;
+    }
+
+    /**
      * Returns the turn number for setting the date.
      *
      * @return the turn number for setting the date.
      */
-    public Long getTurnNumber() {
+    public int getTurnNumber() {
         return turnNumber;
     }
 
-    public void setTurnNumber(Long turnNumber) {
+    public void setTurnNumber(int turnNumber) {
         this.turnNumber = turnNumber;
     }
 
@@ -136,11 +171,11 @@ public class GameStatus {
      *
      * @return the cash currently held by the family.
      */
-    public Long getCash() {
+    public int getCash() {
         return cash;
     }
 
-    public void setCash(Long cash) {
+    public void setCash(int cash) {
         this.cash = cash;
     }
 
@@ -149,11 +184,11 @@ public class GameStatus {
      *
      * @return current dollar value of animals owned by family.
      */
-    public Long getAnimals() {
+    public int getAnimals() {
         return animals;
     }
 
-    public void setAnimals(Long animals) {
+    public void setAnimals(int animals) {
         this.animals = animals;
     }
 
@@ -162,11 +197,11 @@ public class GameStatus {
      *
      * @return current dollar value of food for family.
      */
-    public Long getFood() {
+    public int getFood() {
         return food;
     }
 
-    public void setFood(final Long food) {
+    public void setFood(final int food) {
         this.food = food;
     }
 
@@ -175,11 +210,11 @@ public class GameStatus {
      *
      * @return amount of ammunition.
      */
-    public Long getAmmunition() {
+    public int getAmmunition() {
         return ammunition;
     }
 
-    public void setAmmunition(final Long ammunition) {
+    public void setAmmunition(final int ammunition) {
         this.ammunition = ammunition;
     }
 
@@ -188,11 +223,11 @@ public class GameStatus {
      *
      * @return dollar amount of clothing owned by family.
      */
-    public Long getClothing() {
+    public int getClothing() {
         return clothing;
     }
 
-    public void setClothing(final Long clothing) {
+    public void setClothing(final int clothing) {
         this.clothing = clothing;
     }
 
@@ -201,12 +236,121 @@ public class GameStatus {
      *
      * @return dollar amount of miscellaneous supplies owned by family.
      */
-    public Long getMisc() {
+    public int getMisc() {
         return misc;
     }
 
-    public void setMisc(final Long misc) {
+    public void setMisc(final int misc) {
         this.misc = misc;
+    }
+
+    /**
+     * Indicates whether the game is finished.
+     *
+     * @return <code>true</code> if the game is finished.
+     */
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
+    }
+
+    /**
+     * Returns the most recent tactics choice input value entered.
+     *
+     * @return the most recent tactics choice input value entered.
+     */
+    public int getTacticsChoice() {
+        return tacticsChoice;
+    }
+
+    public void setTacticsChoice(int tacticsChoice) {
+        this.tacticsChoice = tacticsChoice;
+    }
+
+    /**
+     * Indicates whether the most recently encountered riders are hostile. It
+     * appears that in the original BASIC code, S5 = 0 indicates riders are
+     * hostile, and S5 = 1 indicates riders are NOT hostile.
+     *
+     * @return <code>true</code> if the most recently encountered riders are
+     *         hostile.
+     */
+    public boolean isRidersHostile() {
+        return ridersHostile;
+    }
+
+    public void setRidersHostile(boolean ridersHostile) {
+        this.ridersHostile = ridersHostile;
+    }
+
+    /**
+     * Returns the current value of the event generating counter.
+     *
+     * @return the current value of the event generating counter.
+     */
+    public int getEventGeneratingCounter() {
+        return eventGeneratingCounter;
+    }
+
+    public void setEventGeneratingCounter(int eventGeneratingCounter) {
+        this.eventGeneratingCounter = eventGeneratingCounter;
+    }
+
+    /**
+     * Returns the random event number.
+     *
+     * @return the random event number.
+     */
+    public int getRandomEvent() {
+        return randomEvent;
+    }
+
+    public void setRandomEvent(int randomEvent) {
+        this.randomEvent = randomEvent;
+    }
+
+    /**
+     * Returns the most recently selected choice for how well to eat:
+     * <ol>
+     * <li>Poorly</li>
+     * <li>Moderately</li>
+     * <li>Well</li>
+     * </ol>
+     * The value is initialized to -1 so that checks on value prompt for
+     * entering a valid value.
+     *
+     * @return the most recently selected choice for how well to eat: 1, 2, or
+     *         3.
+     */
+    public int getEatingChoice() {
+        return eatingChoice;
+    }
+
+    public void setEatingChoice(final int eatingChoice) {
+        this.eatingChoice = eatingChoice;
+    }
+
+    /**
+     * Returns the user-entered shooting expertise level. The values are
+     * <ol>
+     * <li>Ace Marksman</li>
+     * <li>Good Shot</li>
+     * <li>Fair to Middlin'</li>
+     * <li>Need More Practice</li>
+     * <li>Shaky Knees</li>
+     * </ol>
+     *
+     * @return the user-entered shooting expertise level.
+     */
+    public int getShootingExpertiseLevel() {
+        return shootingExpertiseLevel;
+    }
+
+    public void setShootingExpertiseLevel(final int shootingExpertiseLevel) {
+        this.shootingExpertiseLevel = shootingExpertiseLevel;
     }
 
 }

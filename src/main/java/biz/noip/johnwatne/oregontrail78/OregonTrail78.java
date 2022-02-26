@@ -56,9 +56,9 @@ import biz.noip.johnwatne.oregontrail78.service.TurnService;
  * <li>P = Amount spent on items at fort [amountSpentAtFort]</li>
  * <li>R1 = Random number in choosing events [randomEvent]</li>
  * <li>S4 = Flag for illness [ill]</li>
- * <li>S5 = &quot;Hostility of riders&quot; factor [riderHostility]</li>
+ * <li>S5 = &quot;Hostility of riders&quot; factor [ridersHostile]</li>
  * <li>S6 = Shooting word selector [shootingWordSelector]</li>
- * <li>S$ = Variations of shooting word [shootingWord]</li>
+ * <li>S$ = Variations of shooting word [SHOOTING_WORDS]</li>
  * <li>T = Cash left after initial purchases [cash]</li>
  * <li>X = Choice of action for each turn [action]</li>
  * <li>X1 = Flag for fort option [fort]</li>
@@ -185,8 +185,7 @@ public class OregonTrail78 {
             printInstructions();
         }
 
-        @SuppressWarnings("unused")
-        final Long shootingExpertiseLevel = getShootingExpertiseLevel();
+        setShootingExpertiseLevel();
         makeInitialPurchases();
         System.out.println();
         System.out.println("MONDAY MARCH 29 1847");
@@ -194,16 +193,18 @@ public class OregonTrail78 {
         // GOTO 1000: BEGINNING EACH TURN
         final TurnService turnService =
                 new TurnService(inputService, gameStatus);
-        turnService.executeTurn();
+
+        while (!gameStatus.isFinished()) {
+            turnService.executeTurn();
+            // Line 700 here??
+        }
 
     }
 
     /**
-     * Prompts for and returns shooting expertise level.
-     *
-     * @return the shooting expertise level.
+     * Prompts for and sets the shooting expertise level.
      */
-    private Long getShootingExpertiseLevel() {
+    private void setShootingExpertiseLevel() {
         System.out.println();
         System.out.println();
         System.out.println("HOW GOOD A SHOT ARE YOU WITH YOUR RIFLE?");
@@ -214,10 +215,9 @@ public class OregonTrail78 {
                 "ENTER ONE OF THE ABOVE -- THE BETTER YOU CLAIM YOU ARE, THE");
         System.out.println(
                 "FASTER YOU'LL HAVE TO BE WITH YOUR GUN TO BE SUCCESSFUL.");
-        final Long shootingExpertiseLevel =
-                inputService.getLongInRangeFromInput(Constants.ZERO_LONG,
-                        Constants.ZERO_LONG, Long.valueOf(5));
-        return shootingExpertiseLevel;
+        final int shootingExpertiseLevel =
+                inputService.getIntInRangeFromInput(0, 0, 5);
+        gameStatus.setShootingExpertiseLevel(shootingExpertiseLevel);
     }
 
     /**
@@ -227,8 +227,8 @@ public class OregonTrail78 {
         // Initialization of various flag at the start of the INITIAL PURCHASES
         // section of the original code moved to initialization of gameStatus.
         do {
-            gameStatus.setCash(-1L);
-            gameStatus.setAnimals(Constants.ZERO_LONG);
+            gameStatus.setCash(-1);
+            gameStatus.setAnimals(0);
             getSpendingAmounts();
             // Convert $ spent on ammunition to # of bullets.
             gameStatus.setAmmunition(
@@ -254,8 +254,7 @@ public class OregonTrail78 {
                     || (gameStatus.getAnimals() > MAX_ANIMAL_SPENDING_AMOUNT)) {
                 System.out.println(
                         "HOW MUCH DO YOU WANT TO SPEND ON YOUR OXEN TEAM");
-                gameStatus.setAnimals(
-                        inputService.getLongFromInput(Constants.ZERO_LONG));
+                gameStatus.setAnimals(inputService.getIntFromInput(0));
 
                 if (gameStatus.getAnimals() < MIN_ANIMAL_SPENDING_AMOUNT) {
                     System.out.println("NOT ENOUGH");
