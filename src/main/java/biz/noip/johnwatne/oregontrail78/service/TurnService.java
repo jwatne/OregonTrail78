@@ -38,7 +38,7 @@ public class TurnService {
     }
 
     /**
-     * Executes a single turn.
+     * Executes a single turn, after calling code prints out the date.
      */
     public void executeTurn() {
         if (!gameStatus.isFinished()) {
@@ -52,8 +52,7 @@ public class TurnService {
                         "YOU'D BETTER DO SOME HUNTING OR BUY FOOD AND SOON!!!!");
             }
 
-            @SuppressWarnings("unused")
-            final int startOfTurnTotalMileage = gameStatus.getTripMileage();
+            gameStatus.setStartOfTurnTotalMileage(gameStatus.getTripMileage());
 
             if (gameStatus.isIll() || gameStatus.isInjured()) {
                 gameStatus.setCash(gameStatus.getCash() - 20);
@@ -86,9 +85,180 @@ public class TurnService {
         }
     }
 
-    //*****************
-    // TODO: LINE 700 LOGIC after ending turn
-    //*****************
+    /**
+     * Do setup for next turn. Assumes game is not finished.
+     */
+    public void line700() {
+        if (gameStatus.getTripMileage() >= 2040) {
+            line4000();
+        } else {
+            // Set date.
+            gameStatus.setTurnNumber(gameStatus.getTurnNumber() + 1);
+            System.out.println();
+            System.out.println();
+            System.out.print("MONDAY ");
+            int turnNumber = gameStatus.getTurnNumber();
+            String dateString = "";
+
+            switch (turnNumber) {
+            case 0:
+                dateString = "APRIL 12 ";
+                break;
+            case 1:
+                dateString = "APRIL 26 ";
+                break;
+            case 2:
+                dateString = "MAY 10 ";
+                break;
+            case 3:
+                dateString = "MAY 24 ";
+                break;
+            case 4:
+                dateString = "JUNE 7 ";
+                break;
+            case 5:
+                dateString = "JUNE 21 ";
+                break;
+            case 6:
+                dateString = "JULY 5 ";
+                break;
+            case 7:
+                dateString = "JULY 19 ";
+                break;
+            case 8:
+                dateString = "AUGUST 2 ";
+                break;
+            case 9:
+                dateString = "AUGUST 16 ";
+                break;
+            case 10:
+                dateString = "AUGUST 31 ";
+                break;
+            case 11:
+                dateString = "SEPTEMBER 13 ";
+                break;
+            case 12:
+                dateString = "SEPTEMBER 27 ";
+                break;
+            case 13:
+                dateString = "OCTOBER 11 ";
+                break;
+            case 14:
+                dateString = "OCTOBER 25 ";
+                break;
+            case 15:
+                dateString = "NOVEMBER 8 ";
+                break;
+            case 16:
+                dateString = "NOVEMBER 22";
+                break;
+            case 17:
+                dateString = "DECEMBER 6 ";
+                break;
+            case 18:
+                dateString = "DECEMBER 20 ";
+                break;
+            default:
+                System.out
+                        .println("YOU HAVE BEEN ON THE TRAIL TOO LONG  ------");
+                System.out.println(
+                        "YOUR FAMILY DIES IN THE FIRST BLIZZARD OF WINTER");
+                line3600();
+            }
+
+            if (turnNumber <= 18) {
+                // Turn not ended; continue.
+                System.out.println(dateString + "1847");
+                System.out.println();
+            }
+        }
+    }
+
+    /**
+     * Final turn
+     */
+    public void line4000() {
+        final int startOfTurnTotalMileage =
+                gameStatus.getStartOfTurnTotalMileage();
+        final int lastTurnMileage = (2040 - startOfTurnTotalMileage)
+                / (gameStatus.getTripMileage() - startOfTurnTotalMileage);
+        gameStatus.setFood(gameStatus.getFood() + (1 - lastTurnMileage)
+                * (8 + 5 * gameStatus.getEatingChoice()));
+        System.out.println();
+        System.out.println("YOU FINALLY ARRIVED AT OREGON CITY");
+        System.out.println("AFTER 2040 LONG MILES---HOORAY!!!!!");
+        System.out.println();
+        int lastDay = lastTurnMileage * 14;
+        int turnNumber = gameStatus.getTurnNumber();
+        turnNumber *= 14;
+        turnNumber += lastDay;
+        gameStatus.setTurnNumber(turnNumber);
+        lastDay++;
+
+        if (lastDay >= 8) {
+            lastDay -= 7;
+        }
+
+        String day = "";
+
+        switch (lastDay) {
+        case 1:
+            day = "MONDAY ";
+            break;
+        case 2:
+            day = "TUESDAY ";
+            break;
+        case 3:
+            day = "WEDNESDAY ";
+            break;
+        case 4:
+            day = "THURSDAY ";
+            break;
+        case 5:
+            day = "FRIDAY ";
+            break;
+        case 6:
+            day = "SATURDAY ";
+            break;
+        case 7:
+            day = "SUNDAY ";
+            break;
+        default:
+            throw new IllegalArgumentException("Invalid lastDay: " + lastDay);
+        }
+
+        if (turnNumber > 124) {
+            line4145();
+        } else {
+            turnNumber -= 93;
+            gameStatus.setTurnNumber(turnNumber);
+            System.out.println("JULY " + turnNumber + " 1847");
+            line4215();
+        }
+    }
+
+    public void line4145() {
+        int turnNumber = gameStatus.getTurnNumber();
+
+        if (turnNumber > 155) {
+            line4165();
+        } else {
+            turnNumber -= 124;
+            gameStatus.setTurnNumber(turnNumber);
+            System.out.println("AUGUST " + turnNumber + " 1847");
+            line4215();
+        }
+    }
+
+    public void line4165() {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void line4215() {
+        // TODO Auto-generated method stub
+
+    }
 
     public void line1310() {
         System.out.println(
@@ -1010,7 +1180,7 @@ public class TurnService {
         line4780();
     }
 
-    private void line4780() {
+    public void line4780() {
         if (gameStatus.getMisc() < 0) {
             line3550();
         } else if (gameStatus.isBlizzard()) {

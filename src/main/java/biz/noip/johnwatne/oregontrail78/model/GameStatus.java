@@ -30,6 +30,7 @@ public class GameStatus {
     int randomEvent;
     int eatingChoice = -1;
     int shootingExpertiseLevel = 0;
+    int startOfTurnTotalMileage = 0;
 
     /**
      * Indicates whether the player is in a fort.
@@ -351,6 +352,19 @@ public class GameStatus {
 
     public void setShootingExpertiseLevel(final int shootingExpertiseLevel) {
         this.shootingExpertiseLevel = shootingExpertiseLevel;
+    }
+
+    /**
+     * Returns the total mileage up through the previous turn.
+     *
+     * @return the total mileage up through the previous turn.
+     */
+    public int getStartOfTurnTotalMileage() {
+        return startOfTurnTotalMileage;
+    }
+
+    public void setStartOfTurnTotalMileage(final int startOfTurnTotalMileage) {
+        this.startOfTurnTotalMileage = startOfTurnTotalMileage;
     }
 
 }

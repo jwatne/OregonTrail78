@@ -196,9 +196,11 @@ public class OregonTrail78 {
 
         while (!gameStatus.isFinished()) {
             turnService.executeTurn();
-            // Line 700 here??
-        }
 
+            if (!gameStatus.isFinished()) {
+                turnService.line700();
+            }
+        }
     }
 
     /**
