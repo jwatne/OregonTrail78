@@ -101,61 +101,61 @@ public class TurnService {
             String dateString = "";
 
             switch (turnNumber) {
-            case 0:
+            case 1:
                 dateString = "APRIL 12 ";
                 break;
-            case 1:
+            case 2:
                 dateString = "APRIL 26 ";
                 break;
-            case 2:
+            case 3:
                 dateString = "MAY 10 ";
                 break;
-            case 3:
+            case 4:
                 dateString = "MAY 24 ";
                 break;
-            case 4:
+            case 5:
                 dateString = "JUNE 7 ";
                 break;
-            case 5:
+            case 6:
                 dateString = "JUNE 21 ";
                 break;
-            case 6:
+            case 7:
                 dateString = "JULY 5 ";
                 break;
-            case 7:
+            case 8:
                 dateString = "JULY 19 ";
                 break;
-            case 8:
+            case 9:
                 dateString = "AUGUST 2 ";
                 break;
-            case 9:
+            case 10:
                 dateString = "AUGUST 16 ";
                 break;
-            case 10:
+            case 11:
                 dateString = "AUGUST 31 ";
                 break;
-            case 11:
+            case 12:
                 dateString = "SEPTEMBER 13 ";
                 break;
-            case 12:
+            case 13:
                 dateString = "SEPTEMBER 27 ";
                 break;
-            case 13:
+            case 14:
                 dateString = "OCTOBER 11 ";
                 break;
-            case 14:
+            case 15:
                 dateString = "OCTOBER 25 ";
                 break;
-            case 15:
+            case 16:
                 dateString = "NOVEMBER 8 ";
                 break;
-            case 16:
+            case 17:
                 dateString = "NOVEMBER 22";
                 break;
-            case 17:
+            case 18:
                 dateString = "DECEMBER 6 ";
                 break;
-            case 18:
+            case 19:
                 dateString = "DECEMBER 20 ";
                 break;
             default:
@@ -295,7 +295,7 @@ public class TurnService {
         gameStatus.setFood(Math.max(0, gameStatus.getFood()));
         System.out.println("" + gameStatus.getFood() + "\t"
                 + gameStatus.getAmmunition() + "\t" + gameStatus.getClothing()
-                + "\t" + gameStatus.getMisc() + "\t" + gameStatus.getCash());
+                + "\t\t" + gameStatus.getMisc() + "\t\t" + gameStatus.getCash());
         System.out.println();
         System.out.println("PRESIDENT JAMES K. POLK SENDS YOU HIS");
         System.out.println("      HEARTIEST CONGRATULATIONS");
