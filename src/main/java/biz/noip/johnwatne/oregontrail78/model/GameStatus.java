@@ -7,13 +7,13 @@ package biz.noip.johnwatne.oregontrail78.model;
  *
  */
 public class GameStatus {
-    boolean fort = true;
+    boolean atFort = true;
     boolean injured = false;
     boolean ill = false;
     boolean clearedSouthPass = false;
     boolean clearedBlueMountains = false;
     boolean blizzard = false;
-    int TripMileage = 0;
+    int tripMileage = 0;
     boolean clearedSouthPassSettingMileage = false;
     boolean insufficientColdWeatherClothing = false;
     int cash = -1;
@@ -33,16 +33,16 @@ public class GameStatus {
     int startOfTurnTotalMileage = 0;
 
     /**
-     * Indicates whether the player is in a fort.
+     * Indicates whether the player is at a fort.
      *
-     * @return <code>true</code> if the player is in a fort.
+     * @return <code>true</code> if the player is at a fort.
      */
-    public boolean isFort() {
-        return fort;
+    public boolean isAtFort() {
+        return atFort;
     }
 
-    public void setFort(boolean fort) {
-        this.fort = fort;
+    public void setAtFort(boolean atFort) {
+        this.atFort = atFort;
     }
 
     /**
@@ -117,11 +117,11 @@ public class GameStatus {
      * @return the total mileage for the whole trip.
      */
     public int getTripMileage() {
-        return TripMileage;
+        return tripMileage;
     }
 
     public void setTripMileage(int tripMileage) {
-        TripMileage = tripMileage;
+        this.tripMileage = tripMileage;
     }
 
     /**

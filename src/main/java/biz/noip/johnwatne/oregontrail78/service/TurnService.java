@@ -76,21 +76,22 @@ public class TurnService {
 
             statusService.printInventory(gameStatus);
 
-            if (gameStatus.isFort()) {
-                line1350();
+            if (gameStatus.isAtFort()) {
+                huntOrContinue();
             } else {
-                gameStatus.setFort(true);
-                line1310();
+                gameStatus.setAtFort(true);
+                stopAtFortHuntOrContinue();
             }
         }
     }
 
     /**
-     * Do setup for next turn. Assumes game is not finished.
+     * Checks whether the destination has been reached. If not, do setup for
+     * next turn. Assumes game is not finished.
      */
-    public void line700() {
+    public void checkForGameFinishOrSetupForNextTurn() {
         if (gameStatus.getTripMileage() >= 2040) {
-            line4000();
+            finalTurn();
         } else {
             // Set date.
             gameStatus.setTurnNumber(gameStatus.getTurnNumber() + 1);
@@ -175,9 +176,9 @@ public class TurnService {
     }
 
     /**
-     * Final turn
+     * Final turn - successfully completed journey.
      */
-    public void line4000() {
+    public void finalTurn() {
         final int startOfTurnTotalMileage =
                 gameStatus.getStartOfTurnTotalMileage();
         final int lastTurnMileage = (2040 - startOfTurnTotalMileage)
@@ -230,62 +231,84 @@ public class TurnService {
         System.out.print(day);
 
         if (turnNumber > 124) {
-            line4145();
+            printIfAugustDate();
         } else {
             turnNumber -= 93;
             gameStatus.setTurnNumber(turnNumber);
             System.out.println("JULY " + turnNumber + " 1847");
-            line4215();
+            printFinalInventoryAndCongratulations();
         }
     }
 
-    public void line4145() {
+    /**
+     * Checks if the turn number represents a date in August. If so, print that
+     * date. Otherwise, continue checking which month the turn number falls
+     * into.
+     */
+    public void printIfAugustDate() {
         int turnNumber = gameStatus.getTurnNumber();
 
         if (turnNumber > 155) {
-            line4165();
+            printIfSeptemberDate();
         } else {
             turnNumber -= 124;
             gameStatus.setTurnNumber(turnNumber);
             System.out.println("AUGUST " + turnNumber + " 1847");
-            line4215();
+            printFinalInventoryAndCongratulations();
         }
     }
 
-    public void line4165() {
+    /**
+     * Checks if the turn number represents a date in September. If so, print
+     * that date. Otherwise, continue checking which month the turn number falls
+     * into.
+     */
+    public void printIfSeptemberDate() {
         int turnNumber = gameStatus.getTurnNumber();
 
         if (turnNumber > 185) {
-            line4185();
+            printIfOctoberDate();
         } else {
             turnNumber -= 155;
             gameStatus.setTurnNumber(turnNumber);
             System.out.println("SEPTEMBER " + turnNumber + " 1847");
-            line4215();
+            printFinalInventoryAndCongratulations();
         }
 
     }
 
-    public void line4185() {
+    /**
+     * Checks if the turn number represents a date in October. If so, print that
+     * date. Otherwise, continue checking which month the turn number falls
+     * into.
+     */
+    public void printIfOctoberDate() {
         int turnNumber = gameStatus.getTurnNumber();
 
         if (turnNumber > 216) {
-            line4205();
+            printNovemberDate();
         } else {
             turnNumber -= 185;
             gameStatus.setTurnNumber(turnNumber);
             System.out.println("OCTOBER " + turnNumber + " 1847");
-            line4215();
+            printFinalInventoryAndCongratulations();
         }
     }
 
-    public void line4205() {
+    /**
+     * Prints the date in November that the turn number falls into.
+     */
+    public void printNovemberDate() {
         gameStatus.setTurnNumber(gameStatus.getTurnNumber() - 216);
         System.out.println("NOVEMBER " + gameStatus.getTurnNumber() + " 1847");
-        line4215();
+        printFinalInventoryAndCongratulations();
     }
 
-    public void line4215() {
+    /**
+     * Prints the final inventory at the end of the game and a congratulatory
+     * message from the President.
+     */
+    public void printFinalInventoryAndCongratulations() {
         System.out.println();
         System.out.println("FOOD\tBULLETS\tCLOTHING\tMISC. SUPP.\tCASH");
         gameStatus.setAmmunition(Math.max(0, gameStatus.getAmmunition()));
@@ -293,9 +316,10 @@ public class TurnService {
         gameStatus.setMisc(Math.max(0, gameStatus.getMisc()));
         gameStatus.setCash(Math.max(0, gameStatus.getCash()));
         gameStatus.setFood(Math.max(0, gameStatus.getFood()));
-        System.out.println("" + gameStatus.getFood() + "\t"
-                + gameStatus.getAmmunition() + "\t" + gameStatus.getClothing()
-                + "\t\t" + gameStatus.getMisc() + "\t\t" + gameStatus.getCash());
+        System.out.println(
+                "" + gameStatus.getFood() + "\t" + gameStatus.getAmmunition()
+                        + "\t" + gameStatus.getClothing() + "\t\t"
+                        + gameStatus.getMisc() + "\t\t" + gameStatus.getCash());
         System.out.println();
         System.out.println("PRESIDENT JAMES K. POLK SENDS YOU HIS");
         System.out.println("      HEARTIEST CONGRATULATIONS");
@@ -306,7 +330,11 @@ public class TurnService {
         gameStatus.setFinished(true);
     }
 
-    public void line1310() {
+    /**
+     * Asks the user whether they want to stop at the next fort, hunt, or
+     * continue, and stores the result.
+     */
+    public void stopAtFortHuntOrContinue() {
         System.out.println(
                 "DO YOU WANT TO (1) STOP AT THE NEXT FORT, (2) HUNT, ");
         System.out.println("OR (3) CONTINUE");
@@ -319,11 +347,15 @@ public class TurnService {
             actionType = Actions.HUNT;
         }
 
-        line1400(actionType);
+        executeAction(actionType);
 
     }
 
-    public void line1350() {
+    /**
+     * Asks the user whether they want to hunt or continue, when stopping at the
+     * next fort is not an option, and stores the result.
+     */
+    public void huntOrContinue() {
         boolean validChoice = false;
 
         while (!validChoice) {
@@ -338,8 +370,8 @@ public class TurnService {
             if ((actionType == Actions.CONTINUE) || (gameStatus
                     .getAmmunition() > Constants.MINIMUM_HUNTING_AMMUNITION)) {
                 validChoice = true;
-                line1395();
-                line1400(actionType);
+                toggleAtFort();
+                executeAction(actionType);
             } else {
                 System.out
                         .println("TOUGH---YOU NEED MORE BULLETS TO GO HUNTING");
@@ -347,18 +379,27 @@ public class TurnService {
         }
     }
 
-    public void line1395() {
-        gameStatus.setFort(!gameStatus.isFort());
+    /**
+     * Toggle the value returned by {@link GameStatus#isAtFort()}.
+     */
+    public void toggleAtFort() {
+        gameStatus.setAtFort(!gameStatus.isAtFort());
 
     }
 
-    public void line1400(final Actions actionType) {
+    /**
+     * Execute the user's chosen stop at fort, hunt, or continue action.
+     *
+     * @param actionType
+     *            the action to be performed.
+     */
+    public void executeAction(final Actions actionType) {
         switch (actionType) {
         case STOP_AT_FORT:
-            line1500();
+            stopAtFort();
             break;
         case HUNT:
-            line1700();
+            huntIfAble();
             break;
         case CONTINUE:
             /*
@@ -371,73 +412,83 @@ public class TurnService {
                     "Invalid actionType: " + actionType);
         }
 
-        line1800();
+        checkForSufficientFood();
     }
 
     /**
      * Stop at fort.
      */
-    public void line1500() {
+    public void stopAtFort() {
         System.out.println("ENTER WHAT YOU WISH TO SPEND ON THE FOLLOWING");
         System.out.println("FOOD");
-        int amountSpentAtFort = line1520(); // GOSUB
+        int amountSpentAtFort = getAmountSpent(); // GOSUB
         gameStatus
                 .setFood(gameStatus.getFood() + ((2 * amountSpentAtFort) / 3));
         System.out.println("AMMUNITION");
-        amountSpentAtFort = line1520();
+        amountSpentAtFort = getAmountSpent();
         gameStatus.setAmmunition(gameStatus.getAmmunition()
                 + (2 * amountSpentAtFort / 3) * Constants.BULLETS_PER_DOLLAR);
         System.out.println("CLOTHING");
-        amountSpentAtFort = line1520();
+        amountSpentAtFort = getAmountSpent();
         gameStatus.setClothing(
                 gameStatus.getClothing() + (2 * amountSpentAtFort) / 3);
         System.out.println("MISCELLANEOUS SUPPLIES");
-        amountSpentAtFort = line1520();
+        amountSpentAtFort = getAmountSpent();
         gameStatus.setMisc(gameStatus.getMisc() + (2 * amountSpentAtFort) / 3);
         gameStatus.setTripMileage(gameStatus.getTripMileage()
                 - Constants.REDUCED_MILEAGE_FOR_NOT_CHOOSING_CONTINUE);
-        // GOTO 1800.
     }
 
-    public int line1520() {
-        int amountSpentAtFort = Math.max(0, inputService.getIntFromInput(0));
+    /**
+     * Prompts the user for the amount to spend and confirms that it is not more
+     * than the cash available.
+     *
+     * @return the amount spent on the item, or 0 if the entered amount is more
+     *         than the cash available.
+     */
+    public int getAmountSpent() {
+        int amountSpent = Math.max(0, inputService.getIntFromInput(0));
 
-        if (amountSpentAtFort > 0) {
-            gameStatus.setCash(gameStatus.getCash() - amountSpentAtFort);
+        if (amountSpent > 0) {
+            gameStatus.setCash(gameStatus.getCash() - amountSpent);
 
             if (gameStatus.getCash() < 0) {
                 System.out.println(
                         "YOU DON'T HAVE THAT MUCH--KEEP YOUR SPENDING DOWN");
-                gameStatus.setCash(gameStatus.getCash() + amountSpentAtFort);
-                amountSpentAtFort = 0;
+                gameStatus.setCash(gameStatus.getCash() + amountSpent);
+                amountSpent = 0;
             }
         }
 
-        return amountSpentAtFort;
-
+        return amountSpent;
     }
 
     /**
-     * Hunting
+     * Hunt if there is sufficient ammunition on hand. Otherwise, tell the user
+     * they don't have enough bullets, and prompt for a different action to take
+     * on the turn.
      */
-    public void line1700() {
+    public void huntIfAble() {
         if (gameStatus.getAmmunition() > Constants.MINIMUM_HUNTING_AMMUNITION) {
-            line1715();
+            hunt();
         } else {
             System.out.println("TOUGH---YOU NEED MORE BULLETS TO GO HUNTING");
-            line1310();
+            stopAtFortHuntOrContinue();
         }
     }
 
-    public void line1715() {
+    /**
+     * Go hunting.
+     */
+    public void hunt() {
         gameStatus.setTripMileage(gameStatus.getTripMileage()
                 - Constants.REDUCED_MILEAGE_FOR_NOT_CHOOSING_CONTINUE);
         int actualResponseTime = line4500(); // GOSUB
 
         if (actualResponseTime <= 1) {
-            line1755();
+            rightBetweenTheEyesHuntingResult();
         } else if (100.0 * Math.random() < 13.0 * actualResponseTime) {
-            line1780();
+            missedHuntingResult();
         } else {
             gameStatus.setFood(
                     gameStatus.getFood() + Constants.MAX_HUNTING_FOOD_AMOUNT
@@ -451,10 +502,14 @@ public class TurnService {
                             * actualResponseTime);
         }
 
-        line1800();
+        checkForSufficientFood();
     }
 
-    public void line1755() {
+    /**
+     * Show the message and process the case of getting the &quot;RIGHT BETWEEN
+     * THE EYES&quot; hunting result.
+     */
+    public void rightBetweenTheEyesHuntingResult() {
         System.out.println("RIGHT BETWEEN THE EYES---YOU GOT A BIG ONE!!!!");
         System.out.println("FULL BELLIES TONIGHT!");
         gameStatus.setFood(gameStatus.getFood()
@@ -467,19 +522,30 @@ public class TurnService {
                         * Math.random()));
     }
 
-    public void line1780() {
+    /**
+     * Show the message for missing the prey while hunting. No food added to
+     * inventory.
+     */
+    public void missedHuntingResult() {
         System.out.println("YOU MISSED---AND YOUR DINNER GOT AWAY.....");
     }
 
-    public void line1800() {
+    /**
+     * Check whether the party has sufficient food and process accordingly.
+     */
+    public void checkForSufficientFood() {
         if (gameStatus.getFood() >= Constants.LOW_FOOD_AMOUNT) {
-            line1900();
+            setFoodConsumptionAndCheckForBanditAttack();
         } else {
             line3500();
         }
     }
 
-    public void line1900() {
+    /**
+     * Prompt for the food consumption for the turn, then check whether riders
+     * approach, and process the encounter if so.
+     */
+    public void setFoodConsumptionAndCheckForBanditAttack() {
         int amountConsumedPerTurn = Constants.MIN_FOOD_CONSUMED_PER_TURN;
         final int initialFood = gameStatus.getFood();
 
@@ -519,14 +585,11 @@ public class TurnService {
         final double riderAttackChanceValue = 10.0 * Math.random();
         final double riderAttackCutoff =
                 (tripMileageFactor + 72.0) / (tripMileageFactor + 12.0) - 1.0;
-        // Temp debugging.
-        System.out.println("riderAttackChanceValue: " + riderAttackChanceValue);
-        System.out.println("riderAttackCutoff: " + riderAttackCutoff);
         System.out.println();
 
         // Riders attack
         if (riderAttackChanceValue > riderAttackCutoff) {
-            line2500();
+            chooseRandomEventForTurn();
         } else {
             gameStatus.setRidersHostile(true);
             System.out.print("RIDERS AHEAD.  THEY ");
@@ -561,130 +624,181 @@ public class TurnService {
             } while ((choice < 1) || (choice > 4));
 
             if (!gameStatus.isRidersHostile()) {
-                line2330();
+                handleNonHostileRiders();
             } else if (choice > 1) {
-                line2220();
+                attackContinueOrCircleWagons();
             } else {
                 gameStatus.setTripMileage(gameStatus.getTripMileage() + 20);
                 gameStatus.setMisc(gameStatus.getMisc() - 15);
                 gameStatus.setAmmunition(gameStatus.getAmmunition() - 150);
                 gameStatus.setAnimals(gameStatus.getAnimals() - 40);
-                line2395();
+                determineIfRidersActuallyHostile();
             }
         }
     }
 
-    public void line2220() {
+    /**
+     * Attack, continue, or circle wagons in response to riders appearing.
+     */
+    public void attackContinueOrCircleWagons() {
         if (gameStatus.getTacticsChoice() > 2) {
-            line2285();
+            continueOrCircleWagons();
         } else {
             final int actualResponseTime = line4500();
             gameStatus.setAmmunition(
                     gameStatus.getAmmunition() - actualResponseTime * 40 - 80);
-            line2235(actualResponseTime);
+            checkResultsOfShootingAtRiders(actualResponseTime);
         }
     }
 
-    public void line2235(final int actualResponseTime) {
+    /**
+     * Checks the result of shooting at the riders.
+     *
+     * @param actualResponseTime
+     *            the actual [adjusted] response time in &quot;shooting&quot;.
+     */
+    public void checkResultsOfShootingAtRiders(final int actualResponseTime) {
         if (actualResponseTime > 1) {
-            line2250(actualResponseTime);
+            checkWhetherBadOrMediocreShot(actualResponseTime);
         } else {
             System.out.println("NICE SHOOTING---YOU DROVE THEM OFF");
-            line2395();
+            determineIfRidersActuallyHostile();
         }
     }
 
-    public void line2250(final int actualResponseTime) {
+    /**
+     * Given that the result of shooting at the riders was NOT &quot;NICE
+     * SHOOTING&quot;, handle either being &quot;KINDA SLOW&quot; or a
+     * &quot;LOUSY SHOT&quot;.
+     *
+     * @param actualResponseTime
+     *            the actual [adjusted] response time in &quot;shooting&quot;.
+     */
+    public void checkWhetherBadOrMediocreShot(final int actualResponseTime) {
         if (actualResponseTime <= 4) {
-            line2275();
+            kindaSlowShooting();
         } else {
             System.out.println("LOUSY SHOT---YOU GOT KNIFED");
             gameStatus.setInjured(true);
             System.out.println("YOU HAVE TO SEE OL' DOC BLANCHARD");
-            line2395();
+            determineIfRidersActuallyHostile();
         }
     }
 
-    public void line2275() {
+    /**
+     * Show &quot;KINDA SLOW&quot; message and continue.
+     */
+    public void kindaSlowShooting() {
         System.out.println("KINDA SLOW WITH YOUR COLT .45");
-        line2395();
+        determineIfRidersActuallyHostile();
     }
 
-    public void line2285() {
+    /**
+     * Handle continue or circle wagons strategies in response to riders.
+     */
+    public void continueOrCircleWagons() {
         if (gameStatus.getTacticsChoice() > 3) {
-            line2310();
+            circleWagons();
         } else if (Math.random() > 0.8) {
-            line2390();
+            ridersDoNotAttack();
         } else {
             gameStatus.setAmmunition(gameStatus.getAmmunition() - 150);
             gameStatus.setMisc(gameStatus.getMisc() - 15);
-            line2395();
+            determineIfRidersActuallyHostile();
         }
 
     }
 
-    public void line2310() {
+    /**
+     * Circle wagons in response to riders.
+     */
+    public void circleWagons() {
         final int actualResponseTime = line4500();
         gameStatus.setAmmunition(
                 gameStatus.getAmmunition() - actualResponseTime * 30 - 80);
         gameStatus.setTripMileage(gameStatus.getTripMileage() - 25);
-        line2235(actualResponseTime);
+        checkResultsOfShootingAtRiders(actualResponseTime);
     }
 
-    public void line2330() {
+    /**
+     * Process results for non-hostile riders encountered.
+     */
+    public void handleNonHostileRiders() {
         if (gameStatus.getTacticsChoice() > 1) {
-            line2350();
+            handleNonRunningStrategies();
         } else {
             gameStatus.setTripMileage(gameStatus.getTripMileage() + 15);
             gameStatus.setAnimals(gameStatus.getAnimals() - 10);
-            line2395();
+            determineIfRidersActuallyHostile();
         }
     }
 
-    public void line2350() {
+    /**
+     * Process results when choosing a strategy other than running in response
+     * to non-hostile riders.
+     */
+    public void handleNonRunningStrategies() {
         if (gameStatus.getTacticsChoice() > 2) {
-            line2370();
+            nonHostileContinueOrCircleWagons();
         } else {
             gameStatus.setTripMileage(gameStatus.getTripMileage() - 5);
             gameStatus.setAmmunition(gameStatus.getAmmunition() - 100);
-            line2395();
+            determineIfRidersActuallyHostile();
         }
     }
 
-    public void line2370() {
+    /**
+     * Process results when choosing to continue or circle wagons in response to
+     * non-hostile riders.
+     */
+    public void nonHostileContinueOrCircleWagons() {
         if (gameStatus.getTacticsChoice() > 3) {
-            line2380();
+            nonHostileCircleWagons();
         } else {
-            line2395();
+            determineIfRidersActuallyHostile();
         }
     }
 
-    public void line2380() {
+    /**
+     * Process results when choosing to circle wagons in response to non-hostile
+     * riders.
+     */
+    public void nonHostileCircleWagons() {
         gameStatus.setTripMileage(gameStatus.getTripMileage() - 20);
-        line2395();
+        determineIfRidersActuallyHostile();
     }
 
-    public void line2390() {
+    /**
+     * Handle the case where riders do not attack.
+     */
+    public void ridersDoNotAttack() {
         System.out.println("THEY DID NOT ATTACK");
-        line2500();
+        chooseRandomEventForTurn();
     }
 
-    public void line2395() {
+    /**
+     * Indicates whether riders were actually hostile and processes results
+     * appropriately.
+     */
+    public void determineIfRidersActuallyHostile() {
         if (gameStatus.isRidersHostile()) {
-            line2410();
+            ridersWereHostile();
         } else {
             System.out.println(
                     "RIDERS WERE FRIENDLY, BUT CHECK FOR POSSIBLE LOSSES");
-            line2500();
+            chooseRandomEventForTurn();
         }
 
     }
 
-    public void line2410() {
+    /**
+     * Do follow-up when riders were actually hostile.
+     */
+    public void ridersWereHostile() {
         System.out.println("RIDERS WERE HOSTILE--CHECK FOR LOSSES");
 
         if (gameStatus.getAmmunition() >= 0) {
-            line2500();
+            chooseRandomEventForTurn();
         } else {
             System.out.println(
                     "YOU RAN OUT OF BULLETS AND GOT MASSACRED BY THE RIDERS");
@@ -692,15 +806,21 @@ public class TurnService {
         }
     }
 
-    public void line2500() {
+    /**
+     * Chooses a random event to happen during the current turn.
+     */
+    public void chooseRandomEventForTurn() {
         // Selection of events
         gameStatus.setEventGeneratingCounter(0);
         // Line 2505 RESTORE ????
         gameStatus.setRandomEvent((int) (100 * Math.random()));
-        line2515();
+        executeRandomEvent();
     }
 
-    public void line2515() {
+    /**
+     * Executes the chosen random event.
+     */
+    public void executeRandomEvent() {
         gameStatus.setEventGeneratingCounter(
                 gameStatus.getEventGeneratingCounter() + 1);
 
@@ -710,53 +830,53 @@ public class TurnService {
             int randomEventData = RandomEventDataService.getNextValue();
 
             if (gameStatus.getRandomEvent() > randomEventData) {
-                line2515();
+                executeRandomEvent();
             } else {
                 switch (gameStatus.getEventGeneratingCounter()) {
                 case 0:
-                    line2550();
+                    wagonBreaksDown();
                     break;
                 case 1:
-                    line2570();
+                    oxInjuresLeg();
                     break;
                 case 2:
-                    line2590();
+                    daughterBreaksArm();
                     break;
                 case 3:
-                    line2615();
+                    oxWandersOff();
                     break;
                 case 4:
-                    line2630();
+                    sonGetsLost();
                     break;
                 case 5:
-                    line2645();
+                    unsafeWater();
                     break;
                 case 6:
-                    line2660();
+                    heavyRainsIfBeforeMountains();
                     break;
                 case 7:
-                    line2690();
+                    banditsAttack();
                     break;
                 case 8:
-                    line2785();
+                    wagonFire();
                     break;
                 case 9:
-                    line2810();
+                    lostInFog();
                     break;
                 case 10:
-                    line2825();
+                    snakeBite();
                     break;
                 case 11:
-                    line2860();
+                    wagonSwamped();
                     break;
                 case 12:
-                    line2885();
+                    wildAnimalAttack();
                     break;
                 case 13:
-                    line2970();
+                    hailStorm();
                     break;
                 case 14:
-                    line2990();
+                    setEatingChoice();
                     break;
                 case 15:
                     line3020();
@@ -770,7 +890,10 @@ public class TurnService {
         }
     }
 
-    public void line2550() {
+    /**
+     * Wagon breaks down event.
+     */
+    public void wagonBreaksDown() {
         System.out
                 .println("WAGON BREAKS DOWN--LOSE TIME AND SUPPLIES FIXING IT");
         gameStatus.setTripMileage(
@@ -779,14 +902,20 @@ public class TurnService {
         line3100();
     }
 
-    public void line2570() {
+    /**
+     * Ox injures leg event.
+     */
+    public void oxInjuresLeg() {
         System.out.println("OX INJURES LEG---SLOWS YOU DOWN REST OF TRIP");
         gameStatus.setTripMileage(gameStatus.getTripMileage() - 25);
         gameStatus.setAnimals(gameStatus.getAnimals() - 20);
         line3100();
     }
 
-    public void line2590() {
+    /**
+     * Daughter breaks arm event.
+     */
+    public void daughterBreaksArm() {
         System.out.println("BAD LUCK---YOUR DAUGHTER BROKE HER ARM");
         System.out.println("YOU HAD TO STOP AND USE SUPPLIES TO MAKE A SLING");
         gameStatus.setTripMileage(
@@ -796,29 +925,42 @@ public class TurnService {
         line3100();
     }
 
-    public void line2615() {
+    /**
+     * Ox wanders off event.
+     */
+    public void oxWandersOff() {
         System.out.println("OX WANDERS OFF---SPEND TIME LOOKING FOR IT");
         gameStatus.setTripMileage(gameStatus.getTripMileage() - 17);
         line3100();
     }
 
-    public void line2630() {
+    /**
+     * Son gets lost event.
+     */
+    public void sonGetsLost() {
         System.out.println(
                 "YOUR SON GETS LOST---SPEND HALF THE DAY LOKING FOR HIM");
         gameStatus.setTripMileage(gameStatus.getTripMileage() - 10);
         line3100();
     }
 
-    public void line2645() {
+    /**
+     * Unsafe water event.
+     */
+    public void unsafeWater() {
         System.out.println("UNSAFE WATER--LOSE TIME LOOKING FOR CLEAN SPRING");
         gameStatus.setTripMileage(
                 gameStatus.getTripMileage() - (int) (10 * Math.random()) - 2);
         line3100();
     }
 
-    public void line2660() {
+    /**
+     * Heavy rains even if occurs before mountains. Otherwise sufficient
+     * clothing for cold weather test.
+     */
+    public void heavyRainsIfBeforeMountains() {
         if (gameStatus.getTripMileage() > 950) {
-            line2935();
+            coldWeather();
         } else {
             System.out.println("HEAVY RAINS---TIME AND SUPPLIES LOST");
             gameStatus.setFood(gameStatus.getFood() - 10);
@@ -830,31 +972,44 @@ public class TurnService {
         }
     }
 
-    public void line2690() {
+    /**
+     * Bandits attack event.
+     */
+    public void banditsAttack() {
         System.out.println("BANDITS ATTACK");
         final int actualResponseTime = line4500();
         gameStatus.setAmmunition(
                 gameStatus.getAmmunition() - 20 * actualResponseTime);
 
         if (gameStatus.getAmmunition() >= 0) {
-            line2735(actualResponseTime);
+            checkResultOfBanditAttack(actualResponseTime);
         } else {
             System.out
                     .println("YOU RAN OUT OF BULLETS---THEY GET LOTS OF CASH");
             gameStatus.setCash(gameStatus.getCash() / 3);
-            line2740();
+            shotInLegAndOxTaken();
         }
     }
 
-    public void line2735(final int actualResponseTime) {
+    /**
+     * Checks the result of fighting off a bandit attack if have sufficient
+     * bullets.
+     *
+     * @param actualResponseTime
+     *            the actual [adjusted] response time in shooting at bandits.
+     */
+    public void checkResultOfBanditAttack(final int actualResponseTime) {
         if (actualResponseTime <= 1) {
-            line2770();
+            quickestDraw();
         } else {
-            line2740();
+            shotInLegAndOxTaken();
         }
     }
 
-    public void line2740() {
+    /**
+     * Get shot in leg and have oxen taken event.
+     */
+    public void shotInLegAndOxTaken() {
         System.out.println(
                 "YOU GOT SHOT IN THE LEG AND THEY TOOK ONE OF YOUR OXEN");
         gameStatus.setInjured(true);
@@ -864,13 +1019,20 @@ public class TurnService {
         line3100();
     }
 
-    public void line2770() {
+    /**
+     * Quickest draw outside Dodge City when defending against bandit attack
+     * event.
+     */
+    public void quickestDraw() {
         System.out.println("QUICKEST DRAW OUTSIDE OF DODGE CITY!!!");
         System.out.println("YOU GOT 'EM!");
         line3100();
     }
 
-    public void line2785() {
+    /**
+     * Fire in wagon event.
+     */
+    public void wagonFire() {
         System.out.println(
                 "THERE WAS A FIRE IN YOUR WAGON--FOOD AND SUPPLIES DAMAGED");
         gameStatus.setFood(gameStatus.getFood() - 40);
@@ -881,14 +1043,20 @@ public class TurnService {
         line3100();
     }
 
-    public void line2810() {
+    /**
+     * Lose way in heavy fog event.
+     */
+    public void lostInFog() {
         System.out.println("LOSE YOUR WAY IN HEAVY FOG---TIME IS LOST");
         gameStatus.setTripMileage(
                 gameStatus.getTripMileage() - 10 - (int) (5 * Math.random()));
         line3100();
     }
 
-    public void line2825() {
+    /**
+     * Killed poisonous snake after it bit you event.
+     */
+    public void snakeBite() {
         System.out.println("YOU KILLED A POISONOUS SNAKE AFTER IT BIT YOU");
         gameStatus.setAmmunition(gameStatus.getAmmunition() - 10);
         gameStatus.setMisc(gameStatus.getMisc() - 5);
@@ -902,7 +1070,10 @@ public class TurnService {
         }
     }
 
-    public void line2860() {
+    /**
+     * Wagon swamped fording river event.
+     */
+    public void wagonSwamped() {
         System.out.println(
                 "WAGON GETS SWAMPED FORDING RIVER--LOSE FOOD AND CLOTHES");
         gameStatus.setFood(gameStatus.getFood() - 30);
@@ -912,7 +1083,10 @@ public class TurnService {
         line3100();
     }
 
-    public void line2885() {
+    /**
+     * Wild animals attack event.
+     */
+    public void wildAnimalAttack() {
         System.out.println("WILD ANIMALS ATTACK!");
         final int actualResponseTime = line4500();
 
@@ -939,7 +1113,10 @@ public class TurnService {
         }
     }
 
-    public void line2935() {
+    /**
+     * Cold weather event.
+     */
+    public void coldWeather() {
         System.out.print("COLD WEATHER---BRRRRRRR!---YOU ");
         final boolean insufficietColdWeatherClothing =
                 (gameStatus.getClothing() <= 22 + (int) (4 * Math.random()));
@@ -957,7 +1134,10 @@ public class TurnService {
         }
     }
 
-    public void line2970() {
+    /**
+     * Hail storm event.
+     */
+    public void hailStorm() {
         System.out.println("HAIL STORM---SUPPLIES DAMAGED");
         gameStatus.setTripMileage(
                 gameStatus.getTripMileage() - 5 - (int) (10 * Math.random()));
@@ -967,7 +1147,10 @@ public class TurnService {
         line3100();
     }
 
-    public void line2990() {
+    /**
+     * Set the desired eating choice for the current turn.
+     */
+    public void setEatingChoice() {
         final int eatingChoice = gameStatus.getEatingChoice();
 
         switch (eatingChoice) {
