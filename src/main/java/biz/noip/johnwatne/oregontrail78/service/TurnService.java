@@ -227,6 +227,8 @@ public class TurnService {
             throw new IllegalArgumentException("Invalid lastDay: " + lastDay);
         }
 
+        System.out.print(day);
+
         if (turnNumber > 124) {
             line4145();
         } else {
@@ -251,13 +253,57 @@ public class TurnService {
     }
 
     public void line4165() {
-        // TODO Auto-generated method stub
+        int turnNumber = gameStatus.getTurnNumber();
+
+        if (turnNumber > 185) {
+            line4185();
+        } else {
+            turnNumber -= 155;
+            gameStatus.setTurnNumber(turnNumber);
+            System.out.println("SEPTEMBER " + turnNumber + " 1847");
+            line4215();
+        }
 
     }
 
-    public void line4215() {
-        // TODO Auto-generated method stub
+    public void line4185() {
+        int turnNumber = gameStatus.getTurnNumber();
 
+        if (turnNumber > 216) {
+            line4205();
+        } else {
+            turnNumber -= 185;
+            gameStatus.setTurnNumber(turnNumber);
+            System.out.println("OCTOBER " + turnNumber + " 1847");
+            line4215();
+        }
+    }
+
+    public void line4205() {
+        gameStatus.setTurnNumber(gameStatus.getTurnNumber() - 216);
+        System.out.println("NOVEMBER " + gameStatus.getTurnNumber() + " 1847");
+        line4215();
+    }
+
+    public void line4215() {
+        System.out.println();
+        System.out.println("FOOD\tBULLETS\tCLOTHING\tMISC. SUPP.\tCASH");
+        gameStatus.setAmmunition(Math.max(0, gameStatus.getAmmunition()));
+        gameStatus.setClothing(Math.max(0, gameStatus.getClothing()));
+        gameStatus.setMisc(Math.max(0, gameStatus.getMisc()));
+        gameStatus.setCash(Math.max(0, gameStatus.getCash()));
+        gameStatus.setFood(Math.max(0, gameStatus.getFood()));
+        System.out.println("" + gameStatus.getFood() + "\t"
+                + gameStatus.getAmmunition() + "\t" + gameStatus.getClothing()
+                + "\t" + gameStatus.getMisc() + "\t" + gameStatus.getCash());
+        System.out.println();
+        System.out.println("PRESIDENT JAMES K. POLK SENDS YOU HIS");
+        System.out.println("      HEARTIEST CONGRATULATIONS");
+        System.out.println();
+        System.out.println("           AND WISHES YOU A PROSPEROUS LIFE AHEAD");
+        System.out.println();
+        System.out.println("                      AT YOUR NEW HOME");
+        gameStatus.setFinished(true);
     }
 
     public void line1310() {
