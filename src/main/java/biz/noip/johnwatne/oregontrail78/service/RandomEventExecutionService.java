@@ -25,6 +25,17 @@ public class RandomEventExecutionService {
     }
 
     /**
+     * Chooses a random event to happen during the current turn.
+     */
+    public void chooseRandomEventForTurn() {
+        // Selection of events
+        gameStatus.setEventGeneratingCounter(0);
+        // Line 2505 RESTORE ????
+        gameStatus.setRandomEvent((int) (100 * Math.random()));
+        executeRandomEvent();
+    }
+
+    /**
      * Executes the random event for the given value of the event generating
      * counter.
      *
@@ -95,6 +106,27 @@ public class RandomEventExecutionService {
         System.out.println("HELPFUL INDIANS SHOW YOU WHERE TO FIND MORE FOOD");
         gameStatus.setFood(gameStatus.getFood() + 14);
         sicknessAndMountainsService.checkIfAtMountains();
+    }
+
+    /**
+     * Executes the chosen random event.
+     */
+    private void executeRandomEvent() {
+        gameStatus.setEventGeneratingCounter(
+                gameStatus.getEventGeneratingCounter() + 1);
+    
+        if (gameStatus.getEventGeneratingCounter() == 16) {
+            helpfulIndiansShowWhereToFindFood();
+        } else {
+            int randomEventData = RandomEventDataService.getNextValue();
+    
+            if (gameStatus.getRandomEvent() > randomEventData) {
+                executeRandomEvent();
+            } else {
+                int counter = gameStatus.getEventGeneratingCounter();
+                executeEventForCounterValue(counter);
+            }
+        }
     }
 
     /**
