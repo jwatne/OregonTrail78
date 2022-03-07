@@ -75,7 +75,6 @@ constants in the more complicated formulas.
 
 
 ## Acknowledgements
-Give credit here.
 - This project was a straight port of the original Oregon Trail code. The
 original program provided many hours of enjoyment to me, and millions of
 others, as a child.
