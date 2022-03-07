@@ -45,9 +45,6 @@ public class SicknessAndMountainsService {
     public void determineIfClearedSouthPassSettingMileage() {
         final int tripMileage = gameStatus.getTripMileage();
         gameStatus.setClearedSouthPassSettingMileage(tripMileage <= 950);
-        // End this turn. Execute line 700.
-        // Temp debugging print:
-        System.out.println("Current trip mileage: " + tripMileage);
     }
 
     /**

@@ -274,7 +274,9 @@ public class TurnService {
                     "Invalid actionType: " + actionType);
         }
 
-        checkForSufficientFood();
+        if (!gameStatus.isFinished()) {
+            checkForSufficientFood();
+        }
     }
 
     /**
