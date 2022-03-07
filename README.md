@@ -5,15 +5,12 @@
 ## Table of Contents
 * [General Info](#general-information)
 * [Technologies Used](#technologies-used)
-* [Features](#features)
-* [Screenshots](#screenshots)
 * [Setup](#setup)
 * [Usage](#usage)
 * [Project Status](#project-status)
 * [Room for Improvement](#room-for-improvement)
 * [Acknowledgements](#acknowledgements)
-* [Contact](#contact)
-<!-- * [License](#license) -->
+
 
 
 ## General Information
@@ -40,63 +37,50 @@ text in ALL CAPITAL LETTERS, and doing non-case-sensitive text comparisons of wh
 enters to the word to be typed when "shooting". 
 
 ## Technologies Used
-- OpenJDK 17 - though it should run on any JDK version 9 or greater.
-
-
-## Features
-List the ready features here:
-- Awesome feature 1
-- Awesome feature 2
-- Awesome feature 3
-
-
-## Screenshots
-![Example screenshot](./img/screenshot.png)
-<!-- If you have screenshots you'd like to share, include them here. -->
-
+- OpenJDK 17 - though it should run on any JDK version 11 or greater.
+- Apache Maven 3.8.2
 
 ## Setup
-What are the project requirements/dependencies? Where are they listed? A requirements.txt or a Pipfile.lock file perhaps? Where is it located?
+Setup standard JDK and Maven environment. Import Maven project into preferred 
+Integrated Development Environment (IDE), such as Eclipse, if desired.
+Ensure JDK and Maven are in classpath.
+To compile and create executable .jar file, type the following at a command
+prompt [or choose maven clean install from IDE options]:
 
-Proceed to describe how to install / setup one's local environment / get started with the project.
+`cd [path to parent source folder, containing pom.xml]`
+
+`maven clean install`
 
 
 ## Usage
-How does one go about using it?
-Provide various use cases and code examples here.
+To run the program, type the following while in the same directory in which
+the maven clean install was done:
+ 
+`cd target`
 
-`write-your-code-here`
+`java -jar OregonTrail78-0.0.1-SNAPSHOT.jar`
 
 
 ## Project Status
-Project is: _in progress_ / _complete_ / _no longer being worked on_. If you are no longer working on it, provide reasons why.
+Project is: **complete**.
 
 
 ## Room for Improvement
-Include areas you believe need improvement / could be improved. Also add TODOs for future development.
-
-Room for improvement:
-- Improvement to be done 1
-- Improvement to be done 2
-
-To do:
-- Feature to be added 1
-- Feature to be added 2
+- Only a few of the constants from the original source code were given
+meaningful constant names. I wanted to get this done fairly rapidly, and
+ran out of patience trying to come up with names for each constant
+encountered. Reviewing the formulas laid out in the "Creative Computing"
+article might offer some guidance on appropriate constant names for those
+constants in the more complicated formulas.
 
 
 ## Acknowledgements
 Give credit here.
-- This project was inspired by...
-- This project was based on [this tutorial](https://www.example.com).
-- Many thanks to...
-
-
-## Contact
-Created by [@flynerdpl](https://www.flynerd.pl/) - feel free to contact me!
-
-
-<!-- Optional -->
-<!-- ## License -->
-<!-- This project is open source and available under the [... License](). -->
-
-<!-- You don't have to include all sections - just the one's relevant to your project -->
+- This project was a straight port of the original Oregon Trail code. The
+original program provided many hours of enjoyment to me, and millions of
+others, as a child.
+- Many thanks to Don Rawitsch, Paul Dillenberger, and Bill Heinemann for
+writing the original program, the Minnesota Educational Computing Consortium (MECC)
+for making it available to schools, and the Roseville (Minnesota) school district
+and the taxpayers of Roseville and the state of Minnesota in the 1970's who made
+this available to me to learn from and enjoy.
