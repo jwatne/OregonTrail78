@@ -92,7 +92,7 @@ public class OregonTrail78 {
      * Main method of application.
      *
      * @param args
-     *            command-line arguments; not used.
+     *            command-line arguments: not used.
      */
     public static void main(final String[] args) {
         try (Scanner scanner = new Scanner(System.in)) {
