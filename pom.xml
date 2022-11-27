@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>biz.noip.johnwatne</groupId>
     <artifactId>oregontrail78</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>OregonTrail78</name>
     <description>Port of 1978 version of Oregon Trail to Java</description>
